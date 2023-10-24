@@ -1,0 +1,36 @@
+1- Rodar o "tsc...", com npx. Ex: "npx tsc...";
+
+2- Ao tentar executar seguindo o tutorial, ele vai dar erro.
+    Então, deve-se seguir o seguinte:
+
+    "O erro TypeError: Cannot convert undefined or null to object geralmente ocorre quando
+     você tenta acessar propriedades em null ou undefined. No seu caso, parece que o erro está
+      acontecendo na linha 18 do arquivo column.js no módulo sequelize-typescript."
+    
+    --------Substitua este trecho de código:
+
+    if (args.length >= 2) {
+        const target = args[0];
+        const propertyName = args[1];
+        const propertyDescriptor = args[2];
+        annotate(target, propertyName, propertyDescriptor);
+        return;
+    }
+    return (target, propertyName, propertyDescriptor) => {
+        annotate(target, propertyName, propertyDescriptor !== null && propertyDescriptor !== void 0 ? propertyDescriptor : Object.getOwnPropertyDescriptor(target, propertyName), args[0]);
+    };
+
+    --------Por este:
+
+    if (args.length >= 2) {
+    const target = args[0];
+    const propertyName = args[1];
+    const propertyDescriptor = args[2];
+    annotate(target, propertyName, propertyDescriptor);
+    return;
+}
+return (target, propertyName, propertyDescriptor) => {
+    if (target && propertyName) {
+        annotate(target, propertyName, propertyDescriptor !== null && propertyDescriptor !== void 0 ? propertyDescriptor : Object.getOwnPropertyDescriptor(target, propertyName), args[0]);
+    }
+};0
